@@ -1,21 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-import { dishes, cuisines, dishTypes, activityFactors, alternativeDishes } from './data/dishes';
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, LineChart, Line } from 'recharts';
+import { dishes, cuisines, dishTypes, activityFactors, alternativeDishes, type Dish, type SelectedDish, type CustomDish, type HistoryRecord } from './data/dishes';
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, LineChart, Line } from 'recharts';
 import { FaFire, FaRunning, FaUtensils, FaHeart, FaChartPie, FaTrash, FaPlus, FaMinus, FaShareAlt, FaDownload, FaCalendarAlt, FaSave, FaPlusCircle, FaTimes, FaHistory } from 'react-icons/fa';
 
 function App() {
-  const [selectedDishes, setSelectedDishes] = useState([]);
-  const [selectedCuisine, setSelectedCuisine] = useState('全部');
-  const [selectedType, setSelectedType] = useState('全部');
-  const [totalCalories, setTotalCalories] = useState(0);
-  const [totalProtein, setTotalProtein] = useState(0);
-  const [totalFat, setTotalFat] = useState(0);
-  const [totalCarbs, setTotalCarbs] = useState(0);
-  const [customDishes, setCustomDishes] = useState([]);
-  const [showCustomForm, setShowCustomForm] = useState(false);
-  const [customForm, setCustomForm] = useState({
+  const [selectedDishes, setSelectedDishes] = useState<SelectedDish[]>([]);
+  const [selectedCuisine, setSelectedCuisine] = useState<string>('全部');
+  const [selectedType, setSelectedType] = useState<string>('全部');
+  const [totalCalories, setTotalCalories] = useState<number>(0);
+  const [totalProtein, setTotalProtein] = useState<number>(0);
+  const [totalFat, setTotalFat] = useState<number>(0);
+  const [totalCarbs, setTotalCarbs] = useState<number>(0);
+  const [customDishes, setCustomDishes] = useState<CustomDish[]>([]);
+  const [showCustomForm, setShowCustomForm] = useState<boolean>(false);
+  const [customForm, setCustomForm] = useState<{
+    name: string;
+    calories: string;
+    protein: string;
+    fat: string;
+    carbs: string;
+    portion: number;
+    icon: string;
+    cuisine: string;
+    type: string;
+  }>({
     name: '',
     calories: '',
     protein: '',
@@ -26,10 +36,10 @@ function App() {
     cuisine: '自定义',
     type: '荤菜',
   });
-  const [history, setHistory] = useState([]);
-  const [currentDate, setCurrentDate] = useState(new Date().toISOString().split('T')[0]);
-  const [showHistory, setShowHistory] = useState(false);
-  const [showNutrition, setShowNutrition] = useState(false);
+  const [history, setHistory] = useState<HistoryRecord[]>([]);
+  const [currentDate, setCurrentDate] = useState<string>(new Date().toISOString().split('T')[0]);
+  const [showHistory, setShowHistory] = useState<boolean>(false);
+  const [showNutrition, setShowNutrition] = useState<boolean>(false);
 
   // 从 localStorage 加载数据
   useEffect(() => {
@@ -96,22 +106,22 @@ function App() {
     return cuisineMatch && typeMatch;
   });
 
-  const addDish = (dish) => {
+  const addDish = (dish: Dish | CustomDish) => {
     const existingDish = selectedDishes.find(d => d.id === dish.id);
     if (existingDish) {
       setSelectedDishes(selectedDishes.map(d =>
         d.id === dish.id ? { ...d, quantity: d.quantity + dish.portion } : d
       ));
     } else {
-      setSelectedDishes([...selectedDishes, { ...dish, quantity: dish.portion }]);
+      setSelectedDishes([...selectedDishes, { id: dish.id, quantity: dish.portion }]);
     }
   };
 
-  const removeDish = (dishId) => {
+  const removeDish = (dishId: number) => {
     setSelectedDishes(selectedDishes.filter(d => d.id !== dishId));
   };
 
-  const updateQuantity = (dishId, delta) => {
+  const updateQuantity = (dishId: number, delta: number) => {
     setSelectedDishes(selectedDishes.map(d => {
       if (d.id === dishId) {
         const newQuantity = d.quantity + delta;

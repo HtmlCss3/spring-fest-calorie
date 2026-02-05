@@ -1,4 +1,48 @@
-export const dishes = [
+export interface Dish {
+  id: number;
+  name: string;
+  calories: number;
+  cuisine: string;
+  type: string;
+  portion: number;
+  icon: string;
+  protein: number;
+  fat: number;
+  carbs: number;
+}
+
+export interface SelectedDish {
+  id: number;
+  quantity: number;
+}
+
+export interface CustomDish extends Dish {
+  custom?: boolean;
+}
+
+export interface AlternativeDish {
+  name: string;
+  calorieDiff: number;
+}
+
+export interface AlternativeDishes {
+  [key: string]: AlternativeDish;
+}
+
+export interface ActivityFactors {
+  [key: string]: number;
+}
+
+export interface HistoryRecord {
+  date: string;
+  dishes: SelectedDish[];
+  totalCalories: number;
+  totalProtein: number;
+  totalFat: number;
+  totalCarbs: number;
+}
+
+export const dishes: Dish[] = [
   // 荤菜
   { id: 1, name: '红烧肉', calories: 320, cuisine: '本帮菜', type: '荤菜', portion: 150, icon: '🥩', protein: 18, fat: 24, carbs: 3 },
   { id: 2, name: '糖醋排骨', calories: 280, cuisine: '本帮菜', type: '荤菜', portion: 150, icon: '🍖', protein: 20, fat: 18, carbs: 12 },
@@ -75,11 +119,11 @@ export const dishes = [
   { id: 65, name: '炸鸡块', calories: 290, cuisine: '西式', type: '点心', portion: 100, icon: '🍗', protein: 16, fat: 16, carbs: 18 },
 ];
 
-export const cuisines = ['全部', '本帮菜', '川菜', '粤菜', '东北菜', '鲁菜', '淮扬菜', '浙菜', '苏菜', '西北菜', '家常菜', '北方菜', '江南菜', '台湾菜', '湖南菜', '西式', '自定义'];
+export const cuisines: string[] = ['全部', '本帮菜', '川菜', '粤菜', '东北菜', '鲁菜', '淮扬菜', '浙菜', '苏菜', '西北菜', '家常菜', '北方菜', '江南菜', '台湾菜', '湖南菜', '西式', '自定义'];
 
-export const dishTypes = ['全部', '荤菜', '素菜', '汤品', '主食', '点心'];
+export const dishTypes: string[] = ['全部', '荤菜', '素菜', '汤品', '主食', '点心'];
 
-export const activityFactors = {
+export const activityFactors: ActivityFactors = {
   '跑步': 0.1,
   '步行': 0.05,
   '游泳': 0.08,
@@ -90,7 +134,7 @@ export const activityFactors = {
   '爬山': 0.08,
 };
 
-export const alternativeDishes = {
+export const alternativeDishes: AlternativeDishes = {
   '红烧肉': { name: '清蒸鲈鱼', calorieDiff: -210 },
   '糖醋排骨': { name: '口水鸡', calorieDiff: -140 },
   '红烧狮子头': { name: '白切鸡', calorieDiff: -160 },
