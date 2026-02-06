@@ -1,0 +1,339 @@
+@import "tailwindcss";
+
+/* 自定义动画 */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes slideUp {
+  0% { opacity: 0; transform: translateY(24px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideDown {
+  0% { opacity: 0; transform: translateY(-12px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleIn {
+  0% { opacity: 0; transform: scale(0.92); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* 自定义基础样式 */
+@layer base {
+  body {
+    background: linear-gradient(135deg, #FFEBEE 0%, #FFFFFF 50%, #FFFDE7 100%);
+    background-attachment: fixed;
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: linear-gradient(to bottom, #FFEBEE, #FFF3E0);
+    border-radius: 9999px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(to right, #E57373, #FFB74D);
+    border-radius: 9999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(to right, #EF5350, #FFA726);
+  }
+}
+
+/* 自定义组件类 */
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5
+           bg-gradient-to-r from-red-600 to-red-700
+           text-white font-semibold rounded-xl
+           transition-all duration-300 ease-out
+           hover:from-red-700 hover:to-red-800
+           hover:shadow-[0_10px_40px_-10px_rgba(220,38,38,0.25)]
+           hover:-translate-y-0.5
+           active:scale-[0.98]
+           focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5
+           bg-white text-gray-700 font-semibold rounded-xl
+           border-2 border-gray-200
+           transition-all duration-300 ease-out
+           hover:bg-yellow-50 hover:border-yellow-300 hover:text-gray-900
+           active:scale-[0.98]
+           focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:ring-offset-2;
+  }
+
+  .card {
+    @apply bg-white/95 backdrop-blur rounded-2xl shadow-[0_2px_15px_-3px_rgba(0,0,0,0.05),0_10px_20px_-2px_rgba(0,0,0,0.03)]
+           transition-all duration-300 ease-out
+           hover:shadow-[0_10px_40px_-10px_rgba(220,38,38,0.15),0_2px_10px_-2px_rgba(0,0,0,0.04)];
+  }
+
+  .card-header {
+    @apply px-6 py-4 rounded-t-2xl;
+  }
+
+  .card-body {
+    @apply p-6;
+  }
+
+  .input-field {
+    @apply w-full px-4 py-3 rounded-xl border border-gray-200
+           bg-white text-gray-800
+           transition-all duration-200 ease-out
+           focus:outline-none focus:ring-3 focus:ring-red-200 focus:border-red-400
+           hover:border-gray-300 placeholder:text-gray-400;
+  }
+
+  .select-field {
+    @apply w-full px-4 py-3 rounded-xl border border-gray-200
+           bg-white text-gray-800
+           transition-all duration-200 ease-out
+           focus:outline-none focus:ring-3 focus:ring-red-200 focus:border-red-400
+           hover:border-gray-300 cursor-pointer;
+  }
+
+  .badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium;
+  }
+
+  .badge-red {
+    @apply bg-red-100 text-red-700;
+  }
+
+  .badge-green {
+    @apply bg-green-100 text-green-700;
+  }
+
+  .badge-yellow {
+    @apply bg-yellow-100 text-yellow-700;
+  }
+
+  .badge-blue {
+    @apply bg-blue-100 text-blue-700;
+  }
+
+  .badge-orange {
+    @apply bg-orange-100 text-orange-700;
+  }
+
+  .badge-pink {
+    @apply bg-pink-100 text-pink-700;
+  }
+
+  .stat-value {
+    @apply text-5xl font-bold text-gray-900 font-mono tracking-tight;
+  }
+
+  .stat-label {
+    @apply text-base text-gray-500 font-medium mt-1;
+  }
+
+  .section-title {
+    @apply text-xl font-bold text-gray-800 flex items-center gap-2;
+  }
+
+  .dish-card {
+    @apply bg-white rounded-2xl p-5 text-center
+           border border-pink-200
+           transition-all duration-300 ease-out
+           hover:border-pink-400
+           hover:shadow-[0_8px_30px_-10px_rgba(255,77,109,0.2)]
+           hover:-translate-y-1
+           cursor-pointer relative overflow-hidden;
+  }
+
+  .dish-card::before {
+    content: '';
+    @apply absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-pink-400 to-rose-500 opacity-0 transition-opacity duration-300;
+  }
+
+  .dish-card:hover::before {
+    @apply opacity-100;
+  }
+
+  .dish-icon {
+    @apply text-6xl mb-4 transition-transform duration-300 relative z-10;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  }
+
+  .dish-card:hover .dish-icon {
+    @apply scale-110;
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .dish-name {
+    @apply font-bold text-gray-900 mb-2 truncate text-lg;
+    letter-spacing: 0.02em;
+  }
+
+  .dish-info {
+    @apply text-sm text-gray-500 mb-3 font-medium;
+  }
+
+  .dish-calories {
+    @apply text-rose-500 font-bold flex items-center justify-center gap-1.5 text-sm;
+    font-weight: 600;
+  }
+
+  .btn-add {
+    @apply mt-4 w-full py-3 px-5 
+           bg-gradient-to-r from-pink-500 to-rose-500 
+           text-white font-semibold rounded-xl
+           shadow-[0_4px_15px_rgba(255,77,109,0.3)]
+           transition-all duration-300 ease-out
+           hover:from-pink-600 hover:to-rose-600
+           hover:shadow-[0_6px_20px_rgba(255,77,109,0.4)]
+           hover:scale-[1.02]
+           active:scale-[0.98]
+           flex items-center justify-center gap-2;
+  }
+
+  .history-item {
+    @apply p-4 bg-gradient-to-r from-white to-red-50 rounded-xl 
+           border-l-4 border-red-400 mb-3 cursor-pointer
+           transition-all duration-300 ease-out
+           hover:shadow-[0_10px_40px_-10px_rgba(220,38,38,0.15)]
+           hover:border-red-500 hover:-translate-x-1;
+  }
+
+  .tip-box {
+    @apply p-4 rounded-xl flex items-start gap-3 transition-all duration-300;
+  }
+
+  .tip-warning {
+    @apply bg-gradient-to-r from-yellow-50 to-orange-50 border-l-4 border-yellow-400;
+  }
+
+  .tip-success {
+    @apply bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-400;
+  }
+
+  .tip-info {
+    @apply bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-blue-400;
+  }
+
+  .activity-item {
+    @apply flex items-center justify-between p-4 bg-white rounded-xl
+           transition-all duration-300 ease-out
+           hover:bg-yellow-50
+           hover:shadow-[0_10px_40px_-10px_rgba(251,191,36,0.15)]
+           hover:-translate-x-1;
+  }
+
+  .alternative-item {
+    @apply flex items-center gap-3 p-4 bg-white rounded-xl flex-wrap
+           transition-all duration-300 ease-out
+           hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.1)]
+           hover:-translate-y-0.5;
+  }
+
+  .selected-item {
+    @apply flex items-center gap-4 p-4 bg-gradient-to-r from-white to-red-50 
+           rounded-xl border-l-4 border-red-400
+           transition-all duration-300 ease-out
+           hover:shadow-[0_10px_40px_-10px_rgba(220,38,38,0.15)]
+           hover:border-red-500;
+  }
+
+  .btn-control {
+    @apply w-9 h-9 flex items-center justify-center rounded-full
+           bg-white text-gray-600 shadow-sm
+           transition-all duration-200 ease-out
+           hover:bg-red-500 hover:text-white hover:shadow-md hover:scale-110;
+  }
+
+  .btn-remove {
+    @apply w-9 h-9 flex items-center justify-center rounded-full
+           bg-red-100 text-red-600
+           transition-all duration-200 ease-out
+           hover:bg-red-500 hover:text-white hover:shadow-md;
+  }
+
+  .btn-close {
+    @apply w-9 h-9 flex items-center justify-center rounded-full
+           bg-white/20 text-white
+           transition-all duration-200 ease-out
+           hover:bg-white/30 hover:rotate-90;
+  }
+
+  .btn-toggle {
+    @apply px-3 py-1.5 bg-white/60 rounded-full text-sm font-medium
+           text-gray-700 transition-all duration-200 ease-out
+           hover:bg-white hover:text-red-600;
+  }
+
+  .filter-header {
+    @apply px-6 py-4 rounded-t-2xl flex items-center justify-between cursor-pointer
+           transition-all duration-300;
+  }
+
+  .tab-active {
+    @apply bg-gradient-to-r from-red-500 to-pink-500 text-white shadow-[0_0_20px_rgba(244,67,54,0.3)];
+  }
+
+  .tab-inactive {
+    @apply bg-white text-gray-600 hover:bg-gray-50;
+  }
+}
+
+/* 实用工具类 */
+@layer utilities {
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-red-600 to-pink-500;
+  }
+
+  .text-gradient-gold {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-yellow-600 to-orange-500;
+  }
+
+  .animate-in {
+    animation: fadeIn 0.4s ease-out, slideUp 0.4s ease-out;
+  }
+
+  .glass {
+    @apply bg-white/70 backdrop-blur-xl;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .divider-warm {
+    @apply h-px bg-gradient-to-r from-transparent via-red-200 to-transparent;
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.4s ease-out;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.4s ease-out;
+  }
+
+  .animate-slide-down {
+    animation: slideDown 0.3s ease-out;
+  }
+
+  .animate-scale-in {
+    animation: scaleIn 0.3s ease-out;
+  }
+
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+}

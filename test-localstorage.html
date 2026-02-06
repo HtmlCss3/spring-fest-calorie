@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>本地存储测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #e53e3e;
+        }
+        button {
+            background: #e53e3e;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+        }
+        button:hover {
+            background: #c53030;
+        }
+        pre {
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .success {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+        .error {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+        .info {
+            background: #bee3f8;
+            color: #2a4365;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 本地存储测试工具</h1>
+        
+        <div class="status info">
+            <strong>存储键名：</strong> spring-fest-calorie-data
+        </div>
+
+        <div style="margin: 20px 0;">
+            <button onclick="checkStorage()">📋 检查存储</button>
+            <button onclick="showStorage()">👀 显示数据</button>
+            <button onclick="clearStorage()">🗑️ 清空存储</button>
+            <button onclick="testWrite()">✍️ 测试写入</button>
+        </div>
+
+        <div id="output"></div>
+
+        <div style="margin-top: 30px;">
+            <h2>📊 当前存储内容</h2>
+            <pre id="storageContent">点击"显示数据"查看</pre>
+        </div>
+    </div>
+
+    <script>
+        const STORAGE_KEY = 'spring-fest-calorie-data';
+
+        function output(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `status ${type}`;
+            div.innerHTML = message;
+            document.getElementById('output').appendChild(div);
+            
+            // 5秒后自动移除
+            setTimeout(() => div.remove(), 5000);
+        }
+
+        function checkStorage() {
+            const data = localStorage.getItem(STORAGE_KEY);
+            if (data === null) {
+                output('❌ 存储中无数据', 'error');
+            } else {
+                output(`✅ 找到数据，大小: ${data.length} 字节`, 'success');
+            }
+        }
+
+        function showStorage() {
+            const data = localStorage.getItem(STORAGE_KEY);
+            const contentEl = document.getElementById('storageContent');
+            
+            if (data === null) {
+                contentEl.textContent = '存储中无数据';
+            } else {
+                try {
+                    const parsed = JSON.parse(data);
+                    contentEl.textContent = JSON.stringify(parsed, null, 2);
+                    output('✅ 数据显示成功', 'success');
+                } catch (e) {
+                    contentEl.textContent = '数据解析失败: ' + e.message;
+                    output('❌ 数据格式错误', 'error');
+                }
+            }
+        }
+
+        function clearStorage() {
+            if (confirm('确定要清空所有存储数据吗？')) {
+                localStorage.removeItem(STORAGE_KEY);
+                output('✅ 存储已清空', 'success');
+                document.getElementById('storageContent').textContent = '存储已清空';
+            }
+        }
+
+        function testWrite() {
+            const testData = {
+                dailyRecords: {
+                    '2026-02-06': {
+                        date: '2026-02-06',
+                        selectedDishes: [{ id: 1, quantity: 150 }],
+                        totalCalories: 480,
+                        totalProtein: 27,
+                        totalFat: 36,
+                        totalCarbs: 4.5,
+                        customDishes: [],
+                        savedToHistory: false,
+                        lastModified: new Date().toISOString()
+                    }
+                },
+                customDishes: [],
+                preferences: {
+                    defaultCuisine: '全部',
+                    defaultType: '全部',
+                    enableNotifications: false
+                }
+            };
+            
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(testData));
+                output('✅ 测试数据写入成功', 'success');
+                showStorage();
+            } catch (e) {
+                output('❌ 写入失败: ' + e.message, 'error');
+            }
+        }
+
+        // 页面加载时自动检查
+        window.onload = function() {
+            checkStorage();
+        };
+    </script>
+</body>
+</html>
