@@ -1,7 +1,15 @@
 import React, { useState, useMemo } from 'react';
 import './index.css';
 import { dishes, type Dish, type CustomDish } from './data/dishes';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from 'recharts';
 
 // Components
 import Header from './components/Header';
@@ -64,15 +72,27 @@ function App() {
 
   const allDishes = useMemo(() => [...dishes, ...currentCustomDishes], [currentCustomDishes]);
 
-  const { filteredDishes } = useFiltering(dishes, currentCustomDishes, selectedCuisine, selectedType);
-  const { totalCalories, totalProtein, totalFat, totalCarbs, chartData, nutritionData } = useNutritionCalculation(
+  const { filteredDishes } = useFiltering(
+    dishes,
+    currentCustomDishes,
+    selectedCuisine,
+    selectedType
+  );
+  const { totalCalories, totalProtein, totalFat, totalCarbs, chartData, nutritionData } =
+    useNutritionCalculation(currentDailyData.selectedDishes, currentCustomDishes, dishes);
+  const { tips } = useHealthTips(
+    currentDailyData.selectedDishes,
+    currentCustomDishes,
+    dishes,
+    totalCalories,
+    totalProtein
+  );
+  const { handleExport } = useExport();
+  const { alternatives } = useAlternatives(
     currentDailyData.selectedDishes,
     currentCustomDishes,
     dishes
   );
-  const { tips } = useHealthTips(currentDailyData.selectedDishes, currentCustomDishes, dishes, totalCalories, totalProtein);
-  const { handleExport } = useExport();
-  const { alternatives } = useAlternatives(currentDailyData.selectedDishes, currentCustomDishes, dishes);
 
   const addDish = (dish: Dish | CustomDish) => {
     addDishToCurrentDate({ id: dish.id, quantity: dish.portion });
@@ -139,7 +159,16 @@ function App() {
   };
 
   const handleExportClick = (format: 'json' | 'csv') => {
-    handleExport(currentDate, currentDailyData.selectedDishes, allDishes, totalCalories, totalProtein, totalFat, totalCarbs, format);
+    handleExport(
+      currentDate,
+      currentDailyData.selectedDishes,
+      allDishes,
+      totalCalories,
+      totalProtein,
+      totalFat,
+      totalCarbs,
+      format
+    );
   };
 
   const getHistoryChartData = () => {
@@ -155,7 +184,12 @@ function App() {
     <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-yellow-50">
       <Header onHistoryClick={() => setShowHistory(true)} onShareClick={handleShare} />
 
-      <HistoryModal isOpen={showHistory} history={historyList} onLoad={loadFromHistory} onClose={() => setShowHistory(false)} />
+      <HistoryModal
+        isOpen={showHistory}
+        history={historyList}
+        onLoad={loadFromHistory}
+        onClose={() => setShowHistory(false)}
+      />
 
       <main className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -192,9 +226,7 @@ function App() {
             {historyList.length > 0 && (
               <div className="card overflow-hidden">
                 <div className="bg-gradient-to-r from-indigo-500 to-indigo-600 text-white p-4">
-                  <h2 className="text-lg font-semibold flex items-center gap-2">
-                    📈 热量趋势
-                  </h2>
+                  <h2 className="text-lg font-semibold flex items-center gap-2">📈 热量趋势</h2>
                 </div>
                 <div className="p-6">
                   <ResponsiveContainer width="100%" height={250}>
@@ -216,7 +248,6 @@ function App() {
             <CalorieOverview
               totalCalories={totalCalories}
               currentDate={currentDate}
-              chartData={chartData}
               onSaveHistory={saveCurrentDateToHistory}
             />
 
@@ -229,7 +260,9 @@ function App() {
               onExport={handleExportClick}
             />
 
-            {nutritionData.some((d) => d.value > 0) && <NutritionChart nutritionData={nutritionData} chartData={chartData} />}
+            {nutritionData.some((d) => d.value > 0) && (
+              <NutritionChart nutritionData={nutritionData} chartData={chartData} />
+            )}
 
             {tips.length > 0 && <HealthTips tips={tips} />}
 
