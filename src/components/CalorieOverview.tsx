@@ -1,15 +1,16 @@
 import React from 'react';
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
-import { COLORS } from '../utils/constants';
 
 interface CalorieOverviewProps {
   totalCalories: number;
   currentDate: string;
-  chartData: Array<{ name: string; value: number }>;
   onSaveHistory: () => void;
 }
 
-const CalorieOverview: React.FC<CalorieOverviewProps> = ({ totalCalories, currentDate, chartData, onSaveHistory }) => {
+const CalorieOverview: React.FC<CalorieOverviewProps> = ({
+  totalCalories,
+  currentDate,
+  onSaveHistory,
+}) => {
   return (
     <div className="card overflow-hidden">
       <div className="h-2 bg-gradient-to-r from-red-500 via-pink-500 to-orange-400"></div>
@@ -37,34 +38,6 @@ const CalorieOverview: React.FC<CalorieOverviewProps> = ({ totalCalories, curren
           <span>💾</span> 保存记录
         </button>
       </div>
-      {chartData.length > 0 && (
-        <div className="px-6 pb-6">
-          <ResponsiveContainer width="100%" height={180}>
-            <PieChart>
-              <Pie
-                                      data={chartData}
-                                      cx="50%"
-                                      cy="50%"
-                                      innerRadius={50}
-                                      outerRadius={70}
-                                      paddingAngle={2}
-                                      dataKey="value"
-                                    >
-                                      {chartData.map((_, index) => (
-                                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                      ))}
-                                    </Pie>              <Tooltip
-                contentStyle={{
-                  backgroundColor: 'white',
-                  border: 'none',
-                  borderRadius: '8px',
-                  boxShadow: '0 4px 14px rgba(0,0,0,0.15)',
-                }}
-              />
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
-      )}
     </div>
   );
 };
